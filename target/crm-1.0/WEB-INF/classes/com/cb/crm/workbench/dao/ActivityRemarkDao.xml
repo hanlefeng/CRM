@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cb.crm.workbench.dao.ActivityRemarkDao">
+    <update id="updateRemark">
+        update tbl_activity_remark set
+        noteContent=#{noteContent},
+        editTime=#{editTime},
+        editBy=#{editBy},
+        editFlag=#{editFlag}
+        where id = #{id}
+    </update>
+    <select id="getnoteContentById" resultType="com.cb.crm.workbench.domian.ActivityRemark">
+        select noteContent from tbl_activity_remark where id = #{id}
+    </select>
+    <select id="NumofActReById" resultType="int">
+        select count(*) from tbl_activity_remark where activityId in
+        <foreach collection="array" item="aid" open="(" close=")" separator=",">
+            #{aid}
+        </foreach>
+    </select>
+    <delete id="deleteActReById">
+        delete from tbl_activity_remark where activityId in
+        <foreach collection="array" item="aid" open="(" close=")" separator=",">
+            #{aid}
+        </foreach>
+    </delete>
+    <select id="getActMarklistById" resultType="com.cb.crm.workbench.domian.ActivityRemark">
+        select * from tbl_activity_remark where activityId=#{id}
+    </select>
+    <delete id="RemoveRemark">
+        delete from tbl_activity_remark where id = #{id}
+    </delete>
+    <insert id="SaveRemark">
+        insert into tbl_activity_remark(
+        id,
+        noteContent,
+        createTime,
+        createBy,
+        editFlag,
+        activityId
+        )
+        values (
+        #{id},
+        #{noteContent},
+        #{createTime},
+        #{createBy},
+        #{editFlag},
+        #{activityId}
+        )
+    </insert>
+</mapper>
