@@ -12,14 +12,28 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
 <link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
 
-<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
-<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<link rel="stylesheet" type="text/css" href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css">
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<link rel="stylesheet" type="text/css" href="jquery/bs_pagination/jquery.bs_pagination.min.css">
+	<script type="text/javascript" src="jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+	<script type="text/javascript" src="jquery/bs_pagination/en.js"></script>
+	<script type="text/javascript">
 
-<script type="text/javascript">
 
 	$(function(){
+		$(".time").datetimepicker({
+			minView: "month",
+			language:  'zh-CN',
+			format: 'yyyy-mm-dd',
+			autoclose: true,
+			todayBtn: true,
+			pickerPosition: "top-left"
+		});//时间插件
 		$("#createcluemodalBtn").click(function () {
 			$.ajax({
 				url:"workbench/clue/getUserlist.do",
@@ -30,12 +44,59 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					var html=""
 					$.each(data,function (i,n) {
 						html+="<option value='"+n.id+"'>"+n.name+"</option>"
-						$("#create-clueOwner").html(html)
+						$("#create-Owner").html(html)
 					})
-					$("#create-clueOwner").val(id)
+					$("#create-Owner").val(id)
 					$("#createClueModal").modal("show")
 				}
 			})
+
+		})
+		$("#saveBtn").click(function () {
+			var fullname = $("#create-fullname").val()
+			var appellation = $("#create-appellation").val()
+			var owner = $("#create-Owner").val()
+			var company = $("#create-company").val()
+			var job = $("#create-job").val()
+			var email = $("#create-email").val()
+			var phone = $("#create-phone").val()
+			var website = $("#create-website").val()
+			var mphone = $("#create-mphone").val()
+			var state = $("#create-state").val()
+			var source = $("#create-source").val()
+			var description = $("#create-description").val()
+			var contactSummary = $("#create-contactSummary").val()
+			var nextContactTime = $("#create-nextContactTime").val()
+			var address = $("#create-address").val()
+			$.ajax({
+				url:"workbench/clue/SaveClue.do",
+				data:{
+					"fullname":fullname,
+					"appellation":appellation,
+					"owner":owner,
+					"company":company,
+					"job":job,
+					"email":email,
+					"phone":phone,
+					"website":website,
+					"mphone":mphone,
+					"state":state,
+					"source":source,
+					"description":description,
+					"contactSummary":contactSummary,
+					"nextContactTime":nextContactTime,
+					"address":address
+				},
+				dataType: "json",
+				type: "get",
+				success:function (data) {
+					if (data.success){
+						alert("线索添加成功")
+					}
+
+				}
+			})
+
 
 		})
 		
@@ -63,7 +124,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						<div class="form-group">
 							<label for="create-clueOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-clueOwner">
+								<select class="form-control" id="create-Owner">
 								</select>
 							</div>
 							<label for="create-company" class="col-sm-2 control-label">公司<span style="font-size: 15px; color: red;">*</span></label>
@@ -75,7 +136,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						<div class="form-group">
 							<label for="create-call" class="col-sm-2 control-label">称呼</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-call">
+								<select class="form-control" id="create-appellation">
+									<option></option>
 									<c:forEach items="${appellation}" var="a">
 										<option value="${a.value}">${a.text}</option>
 									</c:forEach>
@@ -83,7 +145,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							</div>
 							<label for="create-surname" class="col-sm-2 control-label">姓名<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-surname">
+								<input type="text" class="form-control" id="create-fullname">
 							</div>
 						</div>
 						
@@ -116,7 +178,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							</div>
 							<label for="create-status" class="col-sm-2 control-label">线索状态</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-status">
+								<select class="form-control" id="create-state">
 								  <option></option>
 								 <c:forEach items="${clueState}" var="a">
 									 <option value="${a.value}">${a.text}</option>
@@ -141,7 +203,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						<div class="form-group">
 							<label for="create-describe" class="col-sm-2 control-label">线索描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="create-describe"></textarea>
+								<textarea class="form-control" rows="3" id="create-description"></textarea>
 							</div>
 						</div>
 						
@@ -157,7 +219,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<div class="form-group">
 								<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 								<div class="col-sm-10" style="width: 300px;">
-									<input type="text" class="form-control" id="create-nextContactTime">
+									<input type="text" class="form-control time" id="create-nextContactTime">
 								</div>
 							</div>
 						</div>
@@ -177,11 +239,11 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" id="saveBtn">保存</button>
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>0
 	
 	<!-- 修改线索的模态窗口 -->
 	<div class="modal fade" id="editClueModal" role="dialog">
